@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero section with flag colors -->
+    <div class="row mb-5 mt-5 align-items-center">
+        <div class="col-md-6">
+            <h1 class="display-4 fw-bold">
+                <span style="color: var(--ph-blue);">Barangay</span> 
+                <span style="color: var(--ph-red);">Complaint</span> 
+                <span class="d-block">Management System</span>
+            </h1>
+            <p class="fs-5">A digital platform to efficiently manage and address concerns within our community.</p>
+            
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary btn-lg mt-3">Go to Dashboard</a>
+            {% else %}
+                <div class="d-grid gap-2 d-md-flex mt-4">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg me-md-2">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login
+                    </a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i> Register
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 text-center">
+            <div style="position: relative;">
+                <div class="ph-flag-sun sun-rays position-absolute" style="top: -20px; right: 100px; z-index: 1;"></div>
+                <img src="{{ url_for('static', filename='img/philippines-map-country-land-svgrepo-com.svg') }}" alt="Complaints System" class="img-fluid" style="max-height: 400px; position: relative; z-index: 2;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature cards with flag colors -->
+    <div class="row mt-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 complaint-card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px; background: var(--ph-blue-gradient);">
+                            <i class="fas fa-file-alt fa-2x text-white"></i>
+                        </div>
+                    </div>
+                    <h3 class="card-title" style="color: var(--ph-blue);">File Complaints</h3>
+                    <p class="card-text">Submit your concerns and issues directly to barangay officials through our digital platform.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 complaint-card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px; background: var(--ph-yellow-gradient);">
+                            <i class="fas fa-clock-rotate-left fa-2x text-dark"></i>
+                        </div>
+                    </div>
+                    <h3 class="card-title" style="color: var(--ph-yellow);">Track Progress</h3>
+                    <p class="card-text">Monitor the status of your complaints in real-time and receive updates on actions taken.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 complaint-card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px; background: var(--ph-red-gradient);">
+                            <i class="fas fa-comments fa-2x text-white"></i>
+                        </div>
+                    </div>
+                    <h3 class="card-title" style="color: var(--ph-red);">Get Resolution</h3>
+                    <p class="card-text">Receive official resolutions to your concerns and feedback on actions taken by officials.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- How it works section with Philippine-themed design -->
+    <div class="row mt-5 mb-4">
+        <div class="col-12 text-center">
+            <h2 class="fw-bold mb-4" style="color: var(--ph-blue);">How It Works</h2>
+            <div style="width: 100px; height: 4px; background: var(--ph-flag-gradient); margin: 0 auto 3rem;"></div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3 text-center mb-4">
+            <div class="step-circle active">1</div>
+            <h5 style="color: var(--ph-blue);" class="fw-bold">Register</h5>
+            <p>Create an account with your personal details</p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+            <div class="step-circle">2</div>
+            <h5 style="color: var(--ph-blue);" class="fw-bold">Submit</h5>
+            <p>File your complaint with all relevant details</p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+            <div class="step-circle">3</div>
+            <h5 style="color: var(--ph-blue);" class="fw-bold">Track</h5>
+            <p>Monitor the progress of your complaint</p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+            <div class="step-circle">4</div>
+            <h5 style="color: var(--ph-blue);" class="fw-bold">Resolve</h5>
+            <p>Get solutions and resolution to your concern</p>
+        </div>
+    </div>
+    
+    <!-- Testimonials/benefits section -->
+    <div class="row mt-5 py-5 px-3 mb-4" style="background: linear-gradient(rgba(0,56,168,0.03), rgba(206,17,38,0.03)); border-radius: 1rem;">
+        <div class="col-md-6 mb-4">
+            <div class="d-flex mb-3">
+                <div class="me-3" style="color: var(--ph-yellow);">
+                    <i class="fas fa-star fa-2x"></i>
+                </div>
+                <div>
+                    <h4 style="color: var(--ph-blue);" class="fw-bold">Efficient Response</h4>
+                    <p>Get faster responses to your community concerns through our streamlined digital system.</p>
+                </div>
+            </div>
+            <div class="d-flex mb-3">
+                <div class="me-3" style="color: var(--ph-yellow);">
+                    <i class="fas fa-chart-line fa-2x"></i>
+                </div>
+                <div>
+                    <h4 style="color: var(--ph-blue);" class="fw-bold">Transparent Process</h4>
+                    <p>Track every stage of your complaint resolution with complete transparency.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="d-flex mb-3">
+                <div class="me-3" style="color: var(--ph-yellow);">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+                <div>
+                    <h4 style="color: var(--ph-blue);" class="fw-bold">Community Engagement</h4>
+                    <p>Be an active participant in improving your barangay through digital participation.</p>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div class="me-3" style="color: var(--ph-yellow);">
+                    <i class="fas fa-mobile-alt fa-2x"></i>
+                </div>
+                <div>
+                    <h4 style="color: var(--ph-blue);" class="fw-bold">Accessible Anywhere</h4>
+                    <p>Submit and track complaints from anywhere, anytime, using any device.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effect for step circles
+    const stepCircles = document.querySelectorAll('.step-circle:not(.active)');
+    stepCircles.forEach(circle => {
+        circle.addEventListener('mouseenter', function() {
+            this.style.borderColor = 'var(--ph-blue)';
+            this.style.color = 'var(--ph-blue)';
+        });
+        circle.addEventListener('mouseleave', function() {
+            this.style.borderColor = 'var(--ph-gray-300)';
+            this.style.color = 'var(--ph-blue)';
+        });
+    });
+});
+</script>
+{% endblock %}

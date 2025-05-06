@@ -1,0 +1,378 @@
+/* Base styles */
+:root {
+    /* Philippine Flag Colors */
+    --ph-blue: #0038A8;
+    --ph-red: #CE1126;
+    --ph-yellow: #FCD116;
+    --ph-white: #FFFFFF;
+    
+    /* Gradient variations */
+    --ph-blue-gradient: linear-gradient(135deg, #0038A8, #002470);
+    --ph-red-gradient: linear-gradient(135deg, #CE1126, #a00d1e);
+    --ph-yellow-gradient: linear-gradient(135deg, #FCD116, #f1b70a);
+    
+    /* Flag-inspired gradient */
+    --ph-flag-gradient: linear-gradient(135deg, #0038A8, #0038A8 33%, #FFFFFF 33%, #FFFFFF 66%, #CE1126 66%, #CE1126 100%);
+    
+    /* Neutral shades */
+    --ph-gray-100: #f8f9fa;
+    --ph-gray-200: #e9ecef;
+    --ph-gray-300: #dee2e6;
+    --ph-gray-400: #ced4da;
+    --ph-gray-500: #adb5bd;
+}
+
+body {
+    background-color: var(--ph-gray-100);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+main {
+    flex: 1;
+    position: relative;
+}
+
+main::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--ph-flag-gradient);
+    z-index: 1000;
+}
+
+/* Card styling */
+.card {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.75rem;
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.18);
+}
+
+.complaint-card {
+    overflow: hidden;
+    position: relative;
+}
+
+.complaint-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--ph-flag-gradient);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.complaint-card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+.complaint-card:hover::after {
+    transform: scaleX(1);
+}
+
+/* Status indicators */
+.status-pending {
+    color: var(--ph-yellow);
+}
+
+.status-processing {
+    color: var(--ph-blue);
+}
+
+.status-resolved {
+    color: #198754;
+}
+
+.status-dismissed {
+    color: var(--ph-red);
+}
+
+/* Navbar enhancements */
+.navbar {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    background: var(--ph-blue-gradient) !important;
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+/* Button styling */
+.btn {
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: height 0.3s ease;
+}
+
+.btn:hover::after {
+    height: 100%;
+}
+
+.btn-primary {
+    background: var(--ph-blue-gradient);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #002d85, #001e5c);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #198754, #0f5132);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #157347, #0d472a);
+    transform: translateY(-2px);
+}
+
+.btn-warning {
+    background: var(--ph-yellow-gradient);
+    color: #212529;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e6bc13, #d5ac0f);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: var(--ph-red-gradient);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #bb0f22, #8a091a);
+    transform: translateY(-2px);
+}
+
+/* Badge styling */
+.badge.bg-warning {
+    background: var(--ph-yellow-gradient) !important;
+    color: #212529;
+}
+
+.badge.bg-primary, .bg-primary {
+    background: var(--ph-blue-gradient) !important;
+}
+
+.badge.bg-danger {
+    background: var(--ph-red-gradient) !important;
+}
+
+/* Form controls */
+.form-control, .form-select {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid var(--ph-gray-300);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-floating > .form-control {
+    padding: 1.625rem 1.25rem 0.625rem;
+}
+
+.form-floating > .form-select {
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--ph-blue);
+    box-shadow: 0 0 0 0.25rem rgba(0, 56, 168, 0.15);
+}
+
+/* Section headers */
+.section-title {
+    position: relative;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: var(--ph-blue);
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    height: 4px;
+    width: 60px;
+    background: var(--ph-flag-gradient);
+    border-radius: 2px;
+}
+
+/* Card header/footer gradient backgrounds */
+.card-header.bg-gradient {
+    border-radius: 0.75rem 0.75rem 0 0;
+    background: var(--ph-blue-gradient);
+}
+
+.card-footer {
+    background-color: var(--ph-gray-100);
+    border-top: none;
+    border-radius: 0 0 0.75rem 0.75rem;
+}
+
+/* Stats cards */
+.card.text-white.bg-primary {
+    background: var(--ph-blue-gradient) !important;
+}
+
+.card.text-white.bg-warning {
+    background: var(--ph-yellow-gradient) !important;
+    color: #212529 !important;
+}
+
+.card.text-white.bg-danger {
+    background: var(--ph-red-gradient) !important;
+}
+
+/* Decorative elements */
+.ph-flag-stars {
+    position: relative;
+}
+
+.ph-flag-sun {
+    background-color: var(--ph-yellow);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(252, 209, 22, 0.5);
+}
+
+.ph-flag-sun::before {
+    content: '★';
+    position: absolute;
+    font-size: 24px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--ph-white);
+}
+
+/* Background elements */
+.ph-triangle {
+    position: fixed;
+    bottom: -200px;
+    right: -200px;
+    width: 400px;
+    height: 400px;
+    background-color: rgba(0, 56, 168, 0.05);
+    clip-path: polygon(100% 0%, 0% 100%, 100% 100%);
+    z-index: -1;
+}
+
+.ph-circle {
+    position: fixed;
+    top: -100px;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background-color: rgba(206, 17, 38, 0.05);
+    z-index: -1;
+}
+
+/* Avatar circle with flag colors */
+.avatar-circle {
+    width: 100px;
+    height: 100px;
+    background: var(--ph-blue-gradient);
+    text-align: center;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 56, 168, 0.2);
+    border: 3px solid var(--ph-white);
+}
+
+.initials {
+    font-size: 40px;
+    color: var(--ph-white);
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Progress steps */
+.step-circle {
+    width: 70px;
+    height: 70px;
+    background: var(--ph-white);
+    border: 3px solid var(--ph-gray-300);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--ph-blue);
+    margin: 0 auto 15px;
+    transition: all 0.3s ease;
+}
+
+.step-circle.active {
+    border-color: var(--ph-blue);
+    background: var(--ph-blue);
+    color: var(--ph-white);
+    box-shadow: 0 0 0 5px rgba(0, 56, 168, 0.1);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes sunRays {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.sun-rays {
+    animation: sunRays 20s linear infinite;
+}
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');

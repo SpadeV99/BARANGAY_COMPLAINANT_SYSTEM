@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="mb-4">
+        <a href="{{ url_for('complaints.list_complaints') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Complaints
+        </a>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Complaint #{{ complaint.id }}</h4>
+            <span class="badge rounded-pill {% if complaint.status == 'pending' %}bg-warning{% elif complaint.status == 'processing' %}bg-info{% elif complaint.status == 'resolved' %}bg-success{% else %}bg-danger{% endif %} fs-6">
+                {{ complaint.status|capitalize }}
+            </span>
+        </div>
+        <div class="card-body">
+            <h3>{{ complaint.title }}</h3>
+            <div class="d-flex mb-4">
+                <div class="text-muted me-3">
+                    <i class="fas fa-calendar-alt me-1"></i> Filed on: {{ complaint.date_filed.strftime('%b %d, %Y') }}
+                </div>
+                <div class="text-muted">
+                    <i class="fas fa-user me-1"></i> By: {{ complaint.complainant.first_name }} {{ complaint.complainant.last_name }}
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Description</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ complaint.description }}</p>
+                </div>
+            </div>
+            
+            {% if complaint.status == 'resolved' and complaint.resolution %}
+            <div class="card mb-4 border-success">
+                <div class="card-header bg-success bg-opacity-10">
+                    <h5 class="mb-0 text-success">Resolution</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ complaint.resolution }}</p>
+                    <div class="text-muted mt-2">
+                        <i class="fas fa-calendar-check me-1"></i> Resolved on: {{ complaint.resolution_date.strftime('%b %d, %Y') if complaint.resolution_date else 'N/A' }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if current_user.role in ['admin', 'staff'] %}
+            <div class="d-flex justify-content-end mt-4">
+                <a href="{{ url_for('complaints.update_complaint', complaint_id=complaint.id) }}" class="btn btn-primary">
+                    <i class="fas fa-edit me-1"></i> Update Status
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

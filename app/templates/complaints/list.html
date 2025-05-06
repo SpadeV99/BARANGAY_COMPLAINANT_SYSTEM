@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="section-title">Complaints</h1>
+        <a href="{{ url_for('complaints.new_complaint') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-1"></i> New Complaint
+        </a>
+    </div>
+
+    {% if complaints %}
+    <div class="row">
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="mb-0">All Complaints</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="searchComplaints" placeholder="Search complaints...">
+                                <button class="btn btn-outline-secondary" type="button">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                {% if current_user.role in ['admin', 'staff'] %}
+                                <th>Complainant</th>
+                                {% endif %}
+                                <th>Date Filed</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for complaint in complaints %}
+                            <tr>
+                                <td>#{{ complaint.id }}</td>
+                                <td>{{ complaint.title }}</td>
+                                {% if current_user.role in ['admin', 'staff'] %}
+                                <td>{{ complaint.complainant.first_name }} {{ complaint.complainant.last_name }}</td>
+                                {% endif %}
+                                <td>{{ complaint.date_filed.strftime('%b %d, %Y') }}</td>
+                                <td>
+                                    <span class="badge rounded-pill {% if complaint.status == 'pending' %}bg-warning{% elif complaint.status == 'processing' %}bg-info{% elif complaint.status == 'resolved' %}bg-success{% else %}bg-danger{% endif %}">
+                                        {{ complaint.status|capitalize }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('complaints.view_complaint', complaint_id=complaint.id) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    {% if current_user.role in ['admin', 'staff'] %}
+                                    <a href="{{ url_for('complaints.update_complaint', complaint_id=complaint.id) }}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer bg-white">
+                    <nav>
+                        <ul class="pagination justify-content-end mb-0">
+                            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <img src="{{ url_for('static', filename='img/empty-state.svg') }}" alt="No complaints" style="width:200px" class="mb-3">
+        <h3>No complaints found</h3>
+        <p class="text-muted">There are no complaints to display right now.</p>
+        <a href="{{ url_for('complaints.new_complaint') }}" class="btn btn-primary mt-2">
+            <i class="fas fa-plus-circle me-1"></i> File a Complaint
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

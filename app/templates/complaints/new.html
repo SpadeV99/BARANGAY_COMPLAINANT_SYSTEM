@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 rounded-lg mb-4">
+                <div class="card-header bg-gradient bg-primary text-white">
+                    <h3 class="text-center font-weight-light my-2">File a New Complaint</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('complaints.new_complaint') }}">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="title" name="title" type="text" placeholder="Enter complaint title" required />
+                            <label for="title">Complaint Title</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" id="description" name="description" placeholder="Enter complaint details" style="height: 200px" required></textarea>
+                            <label for="description">Description</label>
+                            <div class="form-text">Please provide all relevant details about your complaint.</div>
+                        </div>
+
+                        <!-- Optional fields could be added here, like attachments -->
+                        
+                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                            <a class="btn btn-outline-secondary" href="{{ url_for('complaints.list_complaints') }}">
+                                <i class="fas fa-arrow-left me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-1"></i> Submit Complaint
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

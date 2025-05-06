@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 rounded-lg mb-4">
+                <div class="card-header bg-gradient bg-primary text-white">
+                    <h3 class="text-center font-weight-light my-2">Update Complaint Status</h3>
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="mb-3">Complaint #{{ complaint.id }}: {{ complaint.title }}</h5>
+                    
+                    <form method="POST" action="{{ url_for('complaints.update_complaint', complaint_id=complaint.id) }}">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="status" name="status">
+                                <option value="pending" {% if complaint.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="processing" {% if complaint.status == 'processing' %}selected{% endif %}>Processing</option>
+                                <option value="resolved" {% if complaint.status == 'resolved' %}selected{% endif %}>Resolved</option>
+                                <option value="dismissed" {% if complaint.status == 'dismissed' %}selected{% endif %}>Dismissed</option>
+                            </select>
+                            <label for="status">Status</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="assigned_to" name="assigned_to">
+                                <option value="">-- Unassigned --</option>
+                                {% for staff in staff_members %}
+                                <option value="{{ staff.id }}" {% if complaint.assigned_to == staff.id %}selected{% endif %}>{{ staff.first_name }} {{ staff.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="assigned_to">Assign To</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3" id="resolutionField" {% if complaint.status != 'resolved' %}style="display:none;"{% endif %}>
+                            <textarea class="form-control" id="resolution" name="resolution" placeholder="Enter resolution details" style="height: 150px">{{ complaint.resolution or '' }}</textarea>
+                            <label for="resolution">Resolution</label>
+                        </div>
+                        
+                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                            <a class="btn btn-outline-secondary" href="{{ url_for('complaints.view_complaint', complaint_id=complaint.id) }}">
+                                <i class="fas fa-arrow-left me-1"></i> Back
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Update
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('status').addEventListener('change', function() {
+    var resolutionField = document.getElementById('resolutionField');
+    if (this.value === 'resolved') {
+        resolutionField.style.display = 'block';
+    } else {
+        resolutionField.style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

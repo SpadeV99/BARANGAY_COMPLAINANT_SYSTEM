@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('auth.manage_users') }}">User Management</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Delete User</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card shadow border-danger">
+                <div class="card-header" style="background: var(--ph-red-gradient); color: white;">
+                    <div class="d-flex align-items-center">
+                        <h5 class="mb-0">Delete User</h5>
+                        <div class="ms-auto">
+                            <a href="{{ url_for('auth.manage_users') }}" class="btn btn-light btn-sm">
+                                <i class="fas fa-arrow-left me-1"></i> Back
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning!</strong> This action cannot be undone. Deleting this user will also remove all their complaints from the system.
+                    </div>
+                    
+                    <div class="d-flex align-items-center p-3 bg-light rounded mb-4">
+                        <div class="me-3">
+                            <div class="avatar-circle" style="width: 60px; height: 60px; border-radius: 50%; background-color: #007bff; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                                <span class="initials">{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">{{ user.first_name }} {{ user.last_name }}</h6>
+                            <p class="text-muted small mb-0">{{ user.username }} | {{ user.email }}</p>
+                            <p class="mb-0">
+                                <span class="badge rounded-pill 
+                                {% if user.role == 'admin' %}bg-danger
+                                {% elif user.role == 'staff' %}bg-info
+                                {% else %}bg-secondary{% endif %}">
+                                    {{ user.role|capitalize }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <form method="POST" action="{{ url_for('auth.delete_user', user_id=user.id) }}">
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            <label for="confirmation" class="form-label">Type "DELETE" to confirm:</label>
+                            <input type="text" class="form-control" id="confirmation" name="confirmation" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger">Delete User Permanently</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

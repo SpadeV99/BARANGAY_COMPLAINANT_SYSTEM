@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1 style="color: var(--ph-blue);">Dashboard</h1>
+        <p class="text-muted">Welcome, {{ current_user.first_name }} {{ current_user.last_name }}</p>
+    </div>
+</div>
+
+{% if current_user.role in ['admin', 'staff'] %}
+<!-- Admin/Staff Dashboard -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white mb-3">
+            <div class="card-body" style="background: var(--ph-blue-gradient); border-radius: 0.75rem;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Total Complaints</h5>
+                        <h2 class="card-text">{{ total_complaints|default(0) }}</h2>
+                    </div>
+                    <i class="fas fa-clipboard-list fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card mb-3">
+            <div class="card-body" style="background: var(--ph-yellow-gradient); border-radius: 0.75rem;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title text-dark">Pending</h5>
+                        <h2 class="card-text text-dark">{{ pending_complaints|default(0) }}</h2>
+                    </div>
+                    <i class="fas fa-clock fa-3x text-dark opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white mb-3">
+            <div class="card-body" style="background: linear-gradient(135deg, #0dcaf0, #0aa2c0); border-radius: 0.75rem;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Processing</h5>
+                        <h2 class="card-text">{{ processing_complaints|default(0) }}</h2>
+                    </div>
+                    <i class="fas fa-cogs fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white mb-3">
+            <div class="card-body" style="background: linear-gradient(135deg, #198754, #0f5132); border-radius: 0.75rem;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Resolved</h5>
+                        <h2 class="card-text">{{ resolved_complaints|default(0) }}</h2>
+                    </div>
+                    <i class="fas fa-check-circle fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center" 
+                 style="background: linear-gradient(to right, rgba(0,56,168,0.1), transparent);">
+                <h5 class="mb-0" style="color: var(--ph-blue);"><i class="fas fa-list-alt me-2"></i> Recent Complaints</h5>
+                <a href="{{ url_for('complaints.list_complaints') }}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-eye me-1"></i> View All
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Complainant</th>
+                                <th>Date Filed</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if recent_complaints %}
+                                {% for complaint in recent_complaints %}
+                                <tr>
+                                    <td>#{{ complaint.id }}</td>
+                                    <td>{{ complaint.title }}</td>
+                                    <td>{{ complaint.complainant.first_name }} {{ complaint.complainant.last_name }}</td>
+                                    <td>{{ complaint.date_filed.strftime('%b %d, %Y') }}</td>
+                                    <td>
+                                        <span class="badge rounded-pill {% if complaint.status == 'pending' %}bg-warning{% elif complaint.status == 'processing' %}bg-info{% elif complaint.status == 'resolved' %}bg-success{% else %}bg-danger{% endif %}">
+                                            {{ complaint.status|capitalize }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('complaints.view_complaint', complaint_id=complaint.id) }}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No complaints found</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header" 
+                 style="background: linear-gradient(to right, rgba(206,17,38,0.1), transparent);">
+                <h5 class="mb-0" style="color: var(--ph-red);"><i class="fas fa-tasks me-2"></i> Actions Needed</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% if pending_complaints_list %}
+                        {% for complaint in pending_complaints_list %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <h6 class="mb-0">{{ complaint.title }}</h6>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar-alt me-1"></i> 
+                                    Filed on {{ complaint.date_filed.strftime('%b %d, %Y') }}
+                                </small>
+                            </div>
+                            <a href="{{ url_for('complaints.update_complaint', complaint_id=complaint.id) }}" 
+                               class="btn btn-sm" style="background: var(--ph-yellow-gradient); color: #212529;">
+                                <i class="fas fa-user-check me-1"></i> Assign
+                            </a>
+                        </li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item text-center py-4">
+                            <i class="fas fa-check-circle fa-2x mb-2" style="color: var(--ph-blue);"></i>
+                            <p class="mb-0">No pending actions</p>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header" 
+                 style="background: linear-gradient(to right, rgba(252,209,22,0.1), transparent);">
+                <h5 class="mb-0" style="color: var(--ph-blue);"><i class="fas fa-users me-2"></i> Registered Users</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center mb-3">
+                    <div class="col-6">
+                        <h3 class="mb-0" style="color: var(--ph-blue);">{{ total_users|default(0) }}</h3>
+                        <small class="text-muted">Total Users</small>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="mb-0" style="color: var(--ph-red);">{{ new_users_this_month|default(0) }}</h3>
+                        <small class="text-muted">New This Month</small>
+                    </div>
+                </div>
+                <a href="{{ url_for('auth.manage_users') }}" class="btn w-100" style="background: var(--ph-blue-gradient); color: white;">
+                    <i class="fas fa-user-cog me-1"></i> Manage Users
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Resident Dashboard with Philippine flag-themed colors -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white mb-3">
+            <div class="card-body" style="background: var(--ph-blue-gradient); border-radius: 0.75rem;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">My Complaints</h5>
+                        <h2 class="card-text">{{ user_complaints_count|default(0) }}</h2>
+                    </div>
+                    <i class="fas fa-clipboard-list fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-body" style="background: var(--ph-yellow-gradient); border-radius: 0.75rem;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title text-dark">Pending</h5>
+                        <h2 class="card-text text-dark">{{ user_pending_count|default(0) }}</h2>
+                    </div>
+                    <i class="fas fa-clock fa-3x text-dark opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white mb-3">
+            <div class="card-body" style="background: linear-gradient(135deg, #198754, #0f5132); border-radius: 0.75rem;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Resolved</h5>
+                        <h2 class="card-text">{{ user_resolved_count|default(0) }}</h2>
+                    </div>
+                    <i class="fas fa-check-circle fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col">
+        <div class="d-grid gap-2">
+            <a href="{{ url_for('complaints.new_complaint') }}" class="btn btn-lg" 
+               style="background: var(--ph-red-gradient); color: white;">
+                <i class="fas fa-plus-circle me-2"></i> File a New Complaint
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center"
+                 style="background: linear-gradient(to right, rgba(0,56,168,0.1), transparent);">
+                <h5 class="mb-0" style="color: var(--ph-blue);"><i class="fas fa-history me-2"></i> My Recent Complaints</h5>
+                <a href="{{ url_for('complaints.list_complaints') }}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-eye me-1"></i> View All
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Date Filed</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if user_complaints %}
+                                {% for complaint in user_complaints %}
+                                <tr>
+                                    <td>#{{ complaint.id }}</td>
+                                    <td>{{ complaint.title }}</td>
+                                    <td>{{ complaint.date_filed.strftime('%b %d, %Y') }}</td>
+                                    <td>
+                                        <span class="badge rounded-pill {% if complaint.status == 'pending' %}bg-warning{% elif complaint.status == 'processing' %}bg-info{% elif complaint.status == 'resolved' %}bg-success{% else %}bg-danger{% endif %}">
+                                            {{ complaint.status|capitalize }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('complaints.view_complaint', complaint_id=complaint.id) }}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <img src="{{ url_for('static', filename='img/empty-state.svg') }}" alt="No complaints" 
+                                             style="width: 120px; opacity: 0.7;" class="mb-3">
+                                        <p class="mb-0">You haven't filed any complaints yet</p>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
